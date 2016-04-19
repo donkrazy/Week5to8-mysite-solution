@@ -19,19 +19,21 @@ public class AjaxInsertAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*
-		 *  parameter 값을 가져오기
-		 */
+		String name = request.getParameter( "name" );
+		String password = request.getParameter( "pass" );
+		String message = request.getParameter( "content" );
 		
 		GuestbookVo vo = new GuestbookVo();
-		/*
-		 *   vo 값 세팅
-		 *   name, password, message
-		 */
+		vo.setName( name );
+		vo.setPassword( password );
+		vo.setMessage( message );
+		
 		GuestbookDao dao = new GuestbookDao( new MySQLWebDBConnection() );
 		Long no = dao.insert( vo );
 		vo = dao.get( no );
-		
+
+		System.out.println( vo );
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put( "result", "success" );
 		map.put( "data", vo );

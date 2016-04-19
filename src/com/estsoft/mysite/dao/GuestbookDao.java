@@ -20,7 +20,45 @@ public class GuestbookDao {
 	
 	public GuestbookVo get( Long no ) {
 		GuestbookVo vo = null;
-		return vo;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = dbConnection.getConnection();
+			
+			String sql = "SELECT no, name, DATE_FORMAT( reg_date, '%Y-%m-%d %p %h:%i:%s' ), message from guestbook where no = ?";
+			pstmt = conn.prepareStatement( sql );
+			
+			pstmt.setLong( 1, no ); 
+			rs = pstmt.executeQuery();
+			if( rs.next() ) {
+				vo = new GuestbookVo();
+
+				vo.setNo( rs.getLong( 1 ) );
+				vo.setName( rs.getString( 2 ) );
+				vo.setRegDate( rs.getString( 3 ) );
+				vo.setMessage( rs.getString( 4 ) );				
+			}
+			
+			return vo;
+		} catch( SQLException ex ) {
+			System.out.println( "error:" + ex );
+			return null;
+		} finally {
+			try{
+				if( rs != null ) {
+					rs.close();
+				}
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException ex ) {
+				ex.printStackTrace();
+			}
+		}
 	}
 	
 	public Long insert( GuestbookVo vo ) {

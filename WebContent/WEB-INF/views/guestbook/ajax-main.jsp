@@ -23,7 +23,6 @@ var fetchList = function() {
 			}
 			
 			if( response.data.length == 0 ) {
-				console.log( "end----------" );
 				//$( "#btn-next" ).hide();
 				$( "#btn-next" ).attr( "disabled", true );
 				return;
@@ -32,8 +31,9 @@ var fetchList = function() {
 			// HTML 생성한 후 UL에 append
 			$.each( response.data, function(index, vo){
 				//console.log( index + ":" + vo );
-				renderHtml( vo );
+				$( "#gb-list" ).append( renderHtml( vo ) );	
 			});
+			
 			page++;
 		},
 		error: function( xhr/*XMLHttpRequest*/, status, error ) {
@@ -52,50 +52,62 @@ var renderHtml = function( vo ) {
 		"</tr><tr>" +
 		"<td colspan='3'>" + vo.message.replace( /\r\n/g, "<br>") + "</td>" +
 		"</tr></table></li>";
-		
-	$( "#gb-list" ).append( html );	
+	return html;	
 }
 
-
-
 $(function(){
-	$( "#form-insert" ).submit( function(event) {
-		event.preventDefault();
+	// ajax 방명록 메세지 등록
+	$( "#form-insert" ).submit( function( event ) {
+		 // submit 막음!
+		event.preventDefault(); 
+		
+		// input & textarea 입력값 가져오기
+		var name = $( "#name" ).val();
+		var password = $( "#pass" ).val();
+		var message = $( "#message" ).val();
+		
+		// 폼 리셋하기
+		// reset()은 FORMHTMLElement 객체에 있는 함수! 
+		this.reset();
+
+		// AJAX 통신
 		$.ajax({
-			url:"...", 
+			url:"${pageContext.request.contextPath }/guestbook", 
 			type: "post",
-			data: "a=ajax-insert&name=&pass=",
+			dataType: "json",
+			data: "a=ajax-insert" +
+				   "&name=" + name + 
+				   "&pass=" + password +
+				   "&content=" + message,
 			success: function( response ){
-				/*
-				response = {
-					result: "success",
-					data: {
-						"no":10,
-						"password":"",
-						"name":"고길동",
-						"regDate":"2016-04-18 AM 11:33:16",
-						"message":"ㅎㅇ"
-					}
-				}
-				*/
-			}
-		})
-		
-		
-		return false;
+				// console.log( response );
+				$( "#gb-list" ).prepend( renderHtml( response.data ) );	
+			},
+			error: function( xhr/*XMLHttpRequest*/, status, error ) {
+				console.error( status + ":" + error );
+			}			
+		});
 	});
 	
-	$("#btn-next").on( "click", function(){
-		fetchList();
-	});
-	
+	// 바닥 근처까지 스크롤시 데이터 가져오기...
 	$( window ).scroll( function(){
+		// values for detecting bottom
 		var documentHeight = $(document).height();
 		var windowHeight = $(window).height();
 		var scrollTop = $(window).scrollTop();
+		// logging
 		console.log( documentHeight + ":" + windowHeight + ":" + scrollTop );	
+		// measuring...
+		if(  documentHeight - ( windowHeight + scrollTop ) < 50 ) {
+			fetchList();
+		}
 	});
-	
+
+	// 다음 가져오기 버튼 클릭 이벤트 매핑
+	$("#btn-next").on( "click", function(){
+		fetchList();
+	});
+
 	// 최초 데이터 가져오기
 	fetchList();
 });
@@ -109,11 +121,11 @@ $(function(){
 				<form id="form-insert">
 					<table>
 						<tr>
-							<td>이름</td><td><input type="text" name="name"></td>
-							<td>비밀번호</td><td><input type="password" name="pass"></td>
+							<td>이름</td><td><input type="text" name="name" id="name"></td>
+							<td>비밀번호</td><td><input type="password" name="pass" id="pass"></td>
 						</tr>
 						<tr>
-							<td colspan=4><textarea name="content" id="content"></textarea></td>
+							<td colspan=4><textarea name="content" id="message"></textarea></td>
 						</tr>
 						<tr>
 							<td colspan=4 align=right><input type="submit" VALUE=" 확인 "></td>
