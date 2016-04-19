@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<% pageContext.setAttribute( "newLine", "\r\n"); %>
+<% pageContext.setAttribute( "newLine", "\n"); %>
 <!doctype html>
 <html>
 <head>
