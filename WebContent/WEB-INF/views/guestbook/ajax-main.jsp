@@ -59,6 +59,32 @@ var renderHtml = function( vo ) {
 
 
 $(function(){
+	$( "#form-insert" ).submit( function(event) {
+		event.preventDefault();
+		$.ajax({
+			url:"...", 
+			type: "post",
+			data: "a=ajax-insert&name=&pass=",
+			success: function( response ){
+				/*
+				response = {
+					result: "success",
+					data: {
+						"no":10,
+						"password":"",
+						"name":"고길동",
+						"regDate":"2016-04-18 AM 11:33:16",
+						"message":"ㅎㅇ"
+					}
+				}
+				*/
+			}
+		})
+		
+		
+		return false;
+	});
+	
 	$("#btn-next").on( "click", function(){
 		fetchList();
 	});
@@ -80,8 +106,7 @@ $(function(){
 		<c:import url="/WEB-INF/views/include/header.jsp" />
 		<div id="content">
 			<div id="guestbook">
-				<form action="${pageContext.request.contextPath}/guestbook" method="post">
-					<input type="hidden" name="a" value="insert">
+				<form id="form-insert">
 					<table>
 						<tr>
 							<td>이름</td><td><input type="text" name="name"></td>

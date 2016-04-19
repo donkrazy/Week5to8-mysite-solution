@@ -18,9 +18,17 @@ public class GuestbookDao {
 		this.dbConnection = dbConnection;
 	}
 	
-	public void insert( GuestbookVo vo ) {
+	public GuestbookVo get( Long no ) {
+		GuestbookVo vo = null;
+		return vo;
+	}
+	
+	public Long insert( GuestbookVo vo ) {
+		Long no = 0L;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		Statement stmt = null;
+		ResultSet rs  = null;
 		try{
 			conn = dbConnection.getConnection();
 			String sql = "INSERT INTO guestbook VALUES( null, ?, now(), ?, password(?) )";
@@ -30,10 +38,24 @@ public class GuestbookDao {
 			pstmt.setString( 3, vo.getPassword() );
 			pstmt.executeUpdate();
 			
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery( "SELECT LAST_INSERT_ID()" );
+			if( rs.next() ) {
+				no = rs.getLong( 1 );
+			}
+			return no;
+			
 		} catch( SQLException ex ) {
 			System.out.println( "error:" + ex );
+			return 0L;
 		} finally {
 			try{
+				if( rs != null ) {
+					rs.close();
+				}
+				if( stmt != null ) {
+					stmt.close();
+				}
 				if( pstmt != null ) {
 					pstmt.close();
 				}
