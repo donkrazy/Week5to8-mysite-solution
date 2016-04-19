@@ -50,7 +50,7 @@ var renderHtml = function( vo ) {
 		"<td>" + vo.regDate + "</td>" +
 		"<td><a href='#'>삭제</a></td>" +
 		"</tr><tr>" +
-		"<td colspan='3'>" + vo.message.replace( /\r\n/g, "<br>") + "</td>" +
+		"<td colspan='3'>" + vo.message.replace( /\r\n/g, "<br>").replace( /\n/g, "<br>") + "</td>" +
 		"</tr></table></li>";
 	return html;	
 }
@@ -96,7 +96,7 @@ $(function(){
 		var windowHeight = $(window).height();
 		var scrollTop = $(window).scrollTop();
 		// logging
-		console.log( documentHeight + ":" + windowHeight + ":" + scrollTop );	
+		// console.log( documentHeight + ":" + windowHeight + ":" + scrollTop );	
 		// measuring...
 		if(  documentHeight - ( windowHeight + scrollTop ) < 50 ) {
 			fetchList();
