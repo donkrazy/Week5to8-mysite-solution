@@ -14,10 +14,10 @@ public class IndexAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Cookie[] cookies = request.getCookies();
-		for( Cookie cookie : cookies ) {
-			System.out.println( cookie.getName() + ":" + cookie.getValue() );
-		}
+//		Cookie[] cookies = request.getCookies();
+//		for( Cookie cookie : cookies ) {
+//			System.out.println( cookie.getName() + ":" + cookie.getValue() );
+//		}
 		
 		Cookie cookie = new Cookie( "myCookie", "Hello World" );
 		cookie.setMaxAge( 60 * 60 * 24 * 365 );

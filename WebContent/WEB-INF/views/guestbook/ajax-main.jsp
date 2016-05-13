@@ -134,6 +134,12 @@ $(function(){
         		var no = $( "#del-no" ).val();
         		var password = $( "#del-password" ).val();
         		console.log( "clicked:" + no + ":" + password );
+        		
+        		$.ajax( {
+        			url
+        			data: "a=ajax-delete&no=&password=", 
+        		});
+        		
         	},
         	"취소": function() {
         		dialogDelete.dialog( "close" );

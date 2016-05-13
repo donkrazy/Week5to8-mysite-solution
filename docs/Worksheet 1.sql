@@ -1,1 +1,1 @@
-select last_insert_id();
+desc user;
